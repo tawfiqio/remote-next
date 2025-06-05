@@ -1,0 +1,31 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  isAdmin   Boolean  @default(false)
+  jobs      Job[]
+  createdAt DateTime @default(now())
+}
+
+model Job {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  company     String
+  location    String
+  remote      Boolean  @default(true)
+  salary      String?
+  isPaid      Boolean  @default(false)
+  postedById  String
+  postedBy    User     @relation(fields: [postedById], references: [id])
+  createdAt   DateTime @default(now())
+}
